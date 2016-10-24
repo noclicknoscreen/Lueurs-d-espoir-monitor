@@ -1,0 +1,107 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-6 col-sm-4 col-md-4">
+                <img src="images/pupitre.png" class="pupitre" id="pupitre1" />
+                <button type="button" class="btn btn-default btn-lg">12</button>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-4">
+                <img src="images/pupitre.png" class="pupitre" id="pupitre2" />
+                <button type="button" class="btn btn-default btn-lg">12</button>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-4">
+                <img src="images/pupitre.png" class="pupitre" id="pupitre3" />
+                <button type="button" class="btn btn-default btn-lg">12</button>
+            </div>
+        </div>
+        <div class="row">
+            <!-- pupitre 1 -->
+            <div class="col-xs-6 col-sm-4 col-md-4">
+                <table class="table table-striped">
+                    <tr class="warning"><th>Pupitre 1</th>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-xs" title="Effacer les images pour faire de la place"><span class="glyphicon glyphicon-fire"></span></button>
+                            <button type="button" class="btn btn-primary btn-xs" title="re-démarrer le système"><span class="glyphicon glyphicon-repeat"></span></button>
+                            <button type="button" class="btn btn-danger btn-xs" title="Arrêter le système"><span class="glyphicon glyphicon-off"></span></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Réseau</th><td>Okay !</td>
+                    </tr>
+                    <tr>
+                        <th>Espace disponible</th><td>3,2Go</td>
+                    </tr>
+                    <tr>
+                        <th>service <%= app_title %></th><td>Okay !</td>
+                    </tr>
+                    <tr>
+                        <th>service DHCP</th><td>Okay !</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- pupitre 2 -->
+            <div class="col-xs-6 col-sm-4 col-md-4">
+                <table class="table table-striped">
+                    <tr class="warning"><th>Pupitre 2</th>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-xs" title="Effacer les images pour faire de la place"><span class="glyphicon glyphicon-fire"></span></button>
+                            <button type="button" class="btn btn-primary btn-xs" title="re-démarrer le système"><span class="glyphicon glyphicon-repeat"></span></button>
+                            <button type="button" class="btn btn-danger btn-xs" title="Arrêter le système"><span class="glyphicon glyphicon-off"></span></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Réseau</th><td>Okay !</td>
+                    </tr>
+                    <tr>
+                        <th>Espace disponible</th><td>3,2Go</td>
+                    </tr>
+                    <tr>
+                        <th>service <%= app_title %></th><td>Okay !</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- pupitre 3 -->
+            <div class="col-xs-6 col-sm-4 col-md-4">
+                <table class="table table-striped">
+                    <tr class="warning"><th>Pupitre 3</th>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-xs" title="Effacer les images pour faire de la place"><span class="glyphicon glyphicon-fire"></span></button>
+                            <button type="button" class="btn btn-primary btn-xs" title="re-démarrer le système"><span class="glyphicon glyphicon-repeat"></span></button>
+                            <button type="button" class="btn btn-danger btn-xs" title="Arrêter le système"><span class="glyphicon glyphicon-off"></span></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Réseau</th><td>Okay !</td>
+                    </tr>
+                    <tr>
+                        <th>Espace disponible</th><td>3,2Go</td>
+                    </tr>
+                    <tr>
+                        <th>service <%= app_title %></th><td>Okay !</td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+    
+</body>
+</html>
