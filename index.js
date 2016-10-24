@@ -1,30 +1,30 @@
 #!/usr/local/bin/node
-/*
-** shell-server.js returns json response with the stdout and stderr of a shell command
+/******************************************************************************
+** index.js Serveur de monitoring de LU.ES_
 **
 **
-** @Author: Nestor Urquiza
-** @Date: 09/29/2011
+** @Author: Nestor Urquiza - Initial commiter - 09/29/2011
+** @modified : Pierre-Gilles Levallois - nøclick.nøscreen_ - 23/10/2016
 **
-*/
+******************************************************************************/
  
-/*
+/******************************************************************************
 * Dependencies
-*/
+******************************************************************************/
 var http = require('http'),
     url = require('url'),
     exec = require('child_process').exec;
  
-/*
+/******************************************************************************
 * Server Config
-*/
+******************************************************************************/
 var host = "127.0.0.1",
     port = "8080",
     thisServerUrl = "http://" + host + ":" + port;
  
-/*
+/******************************************************************************
 * Command Config
-*/
+******************************************************************************/
 var allowed_cmd  = { 
                       "available_space":  "value",  "value", 'ssh -o ConnectTimeout=3 pi@[device]; df -h /home/pi',
                       "cleanup":          'ssh -o ConnectTimeout=3 pi@[device]; cd /home/pi/lmp; ./scripts/cleanup.sh',
@@ -50,9 +50,9 @@ function prepare_cmd(cmd, device){
   return cmd.replace("[device]", device_ip_list[device]);
 }
 
-/*
+/******************************************************************************
 * Main
-*/
+******************************************************************************/
 http.createServer(function (req, res) {
   req.addListener('end', function () {
          
