@@ -15,15 +15,15 @@
         <div class="row">
             <div class="col-xs-6 col-sm-4 col-md-4">
                 <img src="images/pupitre.png" class="pupitre" id="pupitre1" />
-                <button type="button" class="btn btn-default btn-lg">12</button>
+                <div type="button" class="btn btn-default btn-lg"><span id="images-count-1">0</span></div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4">
                 <img src="images/pupitre.png" class="pupitre" id="pupitre2" />
-                <button type="button" class="btn btn-default btn-lg">12</button>
+                <div type="button" class="btn btn-default btn-lg"><span id="images-count-2">0</span></div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4">
                 <img src="images/pupitre.png" class="pupitre" id="pupitre3" />
-                <button type="button" class="btn btn-default btn-lg">12</button>
+                <div type="button" class="btn btn-default btn-lg"><span id="images-count-3">0</span></div>
             </div>
         </div>
         <div class="row">
@@ -38,13 +38,13 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Réseau</th><td>Okay !</td>
+                        <th>Réseau</th><td id="monitor-network-1"></td>
                     </tr>
                     <tr>
-                        <th>Espace disponible</th><td>3,2Go</td>
+                        <th>Espace disponible</th><td id="available-space-1"></td>
                     </tr>
                     <tr>
-                        <th>service <%= app_title %></th><td>Okay !</td>
+                        <th>service <%= app_title %></th><td id="lues-service-1"></td>
                     </tr>
                     <tr>
                         <th>service DHCP</th><td>Okay !</td>
@@ -63,13 +63,13 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Réseau</th><td>Okay !</td>
+                        <th>Réseau</th><td id="monitor-network-2"></td>
                     </tr>
                     <tr>
-                        <th>Espace disponible</th><td>3,2Go</td>
+                        <th>Espace disponible</th><td id="available-space-2"></td>
                     </tr>
                     <tr>
-                        <th>service <%= app_title %></th><td>Okay !</td>
+                        <th>service <%= app_title %></th><td id="lues-service-2"></td>
                     </tr>
                 </table>
             </div>
@@ -85,13 +85,13 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Réseau</th><td>Okay !</td>
+                        <th>Réseau</th><td id="monitor-network-3"></td>
                     </tr>
                     <tr>
-                        <th>Espace disponible</th><td>3,2Go</td>
+                        <th>Espace disponible</th><td id="available-space-3"></td>
                     </tr>
                     <tr>
-                        <th>service <%= app_title %></th><td>Okay !</td>
+                        <th>service <%= app_title %></th><td id="lues-service-3"></td>
                     </tr>
                 </table>
             </div>
@@ -102,6 +102,109 @@
     <footer>
         <% include ../partials/footer %>
     </footer>
-    
+    <!-- Scripts to be included in a js library futher more... -->
+    <script type="text/javascript">
+        $(document).ready( function() {
+            //
+            // Launch ajax request
+            //
+            function update(elmt, display_callback) {
+                var pupitre_id = elmt.attr("id").replace(/[-#A-z]/g, ""),
+                    device = "rasp" + pupitre_id,
+                    command = elmt.attr("id").replace("-"+pupitre_id, "");
+                console.log("Refreshing " + command + " for device #" + pupitre_id);
+                $.ajax({
+                    url: '/api/?cmd=' + command + '&device=' + device, 
+                    type: 'GET',
+                    success : function(response){
+                        var r = JSON.parse(response);
+                        if (r.stderr != "") {
+                            console.log("error : " + r.stderr + "\ncmd : " + r.cmd);
+                        } else {
+                            elmt.fadeOut("fast");
+                            display_callback(elmt, r);
+                        }
+                    },
+                    error : function(response){
+                        console.log(response);
+                    }
+                });
+            }
+
+            // Callback de mise en page images-count
+            var display_images_count = function(elmt, data) {
+                var val = data.stdout.replace(' ', '');
+                elmt.text("" +  val).fadeIn("fast");
+            }
+
+            // Callback de mise en page available-space
+            var display_available_space = function(elmt, data){
+                var val = data.stdout.replace(' ', '');
+                elmt.text("" +  val).fadeIn("fast");
+            }
+
+            // Callback de mise en page monitor-network
+            var display_monitor_network = function(elmt, data){
+                var val = data.stdout.replace(' ', '');
+                elmt.text("" +  val).fadeIn("fast");
+            }
+
+            // Callback de mise en page lues-service
+            var display_lues_service = function(elmt, data){
+                var val = data.stdout.replace(' ', '');
+                elmt.text("" +  val).fadeIn("fast");
+            }
+
+
+            // Launching all updates
+            setInterval(function(){
+                update($("#images-count-1"), display_images_count);
+            }, 10000);
+            setInterval(function(){
+                update($("#images-count-2"), display_images_count);
+            }, 10000);
+            setInterval(function(){
+                update($("#images-count-3"), display_images_count);
+            }, 10000);
+
+            // Available space
+            setInterval(function(){
+                update($("#available-space-1"), display_available_space);
+            }, 10000);
+            setInterval(function(){
+                update($("#available-space-2"), display_available_space);
+            }, 10000);
+            setInterval(function(){
+                update($("#available-space-3"), display_available_space);
+            }, 10000);
+
+            // monitor network
+            setInterval(function(){
+                update($("#monitor-network-1"), display_monitor_network);
+            }, 10000);
+            setInterval(function(){
+                update($("#monitor-network-2"), display_monitor_network);
+            }, 10000);
+            setInterval(function(){
+                update($("#monitor-network-3"), display_monitor_network);
+            }, 10000);
+
+            // Service applicatif LU.ES_
+            setInterval(function(){
+                update($("#lues-service-1"), display_lues_service);
+            }, 10000);
+            setInterval(function(){
+                update($("#lues-service-2"), display_lues_service);
+            }, 10000);
+            setInterval(function(){
+                update($("#lues-service-3"), display_lues_service);
+            }, 10000);
+
+
+         });
+ 
+
+    </script>
+
 </body>
 </html>
