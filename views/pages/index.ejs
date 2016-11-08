@@ -15,39 +15,39 @@
         <div class="row">
             <div class="col-xs-6 col-sm-4 col-md-4">
                 <img src="images/pupitre.png" class="pupitre" id="pupitre1" />
-                <div type="button" class="btn btn-default btn-lg"><span id="images-count-1">0</span></div>
+                <div type="button" class="btn btn-default btn-lg"><span id="images_count_1">0</span></div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4">
                 <img src="images/pupitre.png" class="pupitre" id="pupitre2" />
-                <div type="button" class="btn btn-default btn-lg"><span id="images-count-2">0</span></div>
+                <div type="button" class="btn btn-default btn-lg"><span id="images_count_2">0</span></div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4">
                 <img src="images/pupitre.png" class="pupitre" id="pupitre3" />
-                <div type="button" class="btn btn-default btn-lg"><span id="images-count-3">0</span></div>
+                <div type="button" class="btn btn-default btn-lg"><span id="images_count_3">0</span></div>
             </div>
         </div>
         <div class="row">
             <!-- pupitre 1 -->
             <div class="col-xs-6 col-sm-4 col-md-4">
                 <table class="table table-striped">
-                    <tr class="warning"><th>Pupitre 1</th>
+                    <tr class="success" id="pupitre_1"><th>Pupitre 1</th>
                         <td>
-                            <button type="button" class="btn btn-warning btn-xs" title="Effacer les images pour faire de la place"><span class="glyphicon glyphicon-fire"></span></button>
-                            <button type="button" class="btn btn-primary btn-xs" title="re-démarrer le système"><span class="glyphicon glyphicon-repeat"></span></button>
-                            <button type="button" class="btn btn-danger btn-xs" title="Arrêter le système"><span class="glyphicon glyphicon-off"></span></button>
+                            <button type="button" id="cleanup_1" class="commande btn btn-warning btn-xs" title="Effacer les images pour faire de la place"><span class="glyphicon glyphicon-fire"></span></button>
+                            <button type="button" id="reboot_1" class="commande btn btn-primary btn-xs" title="re-démarrer le système"><span class="glyphicon glyphicon-repeat"></span></button>
+                            <button type="button" id="halt_1" class="commande btn btn-danger btn-xs" title="Arrêter le système"><span class="glyphicon glyphicon-off"></span></button>
                         </td>
                     </tr>
-                    <tr>
-                        <th>Réseau</th><td id="monitor-network-1"></td>
+                    <tr class="danger">
+                        <td colspan="2" id="error_1"></td> 
                     </tr>
                     <tr>
-                        <th>Espace disponible</th><td id="available-space-1"></td>
+                        <th>Espace disponible</th><td id="available_space_1"></td>
                     </tr>
                     <tr>
-                        <th>service <%= app_title %></th><td id="lues-service-1"></td>
+                        <th>service <%= app_title %></th><td id="lues_service_1"></td>
                     </tr>
                     <tr>
-                        <th>service DHCP</th><td>Okay !</td>
+                        <th>service DHCP</th><td id="dhcp_service_1"></td>
                     </tr>
                 </table>
             </div>
@@ -55,21 +55,21 @@
             <!-- pupitre 2 -->
             <div class="col-xs-6 col-sm-4 col-md-4">
                 <table class="table table-striped">
-                    <tr class="warning"><th>Pupitre 2</th>
+                    <tr class="success" id="pupitre_2"><th>Pupitre 2</th>
                         <td>
-                            <button type="button" class="btn btn-warning btn-xs" title="Effacer les images pour faire de la place"><span class="glyphicon glyphicon-fire"></span></button>
-                            <button type="button" class="btn btn-primary btn-xs" title="re-démarrer le système"><span class="glyphicon glyphicon-repeat"></span></button>
-                            <button type="button" class="btn btn-danger btn-xs" title="Arrêter le système"><span class="glyphicon glyphicon-off"></span></button>
+                            <button type="button" id="cleanup_2" class="commande btn btn-warning btn-xs" title="Effacer les images pour faire de la place"><span class="glyphicon glyphicon-fire"></span></button>
+                            <button type="button" id="reboot_2" class="commande btn btn-primary btn-xs" title="re-démarrer le système"><span class="glyphicon glyphicon-repeat"></span></button>
+                            <button type="button" id="halt_2" class="commande btn btn-danger btn-xs" title="Arrêter le système"><span class="glyphicon glyphicon-off"></span></button>
                         </td>
                     </tr>
-                    <tr>
-                        <th>Réseau</th><td id="monitor-network-2"></td>
+                    <tr class="danger">
+                        <td colspan="2" id="error_2"></td> 
                     </tr>
                     <tr>
-                        <th>Espace disponible</th><td id="available-space-2"></td>
+                        <th>Espace disponible</th><td id="available_space_2"></td>
                     </tr>
                     <tr>
-                        <th>service <%= app_title %></th><td id="lues-service-2"></td>
+                        <th>service <%= app_title %></th><td id="lues_service_2"></td>
                     </tr>
                 </table>
             </div>
@@ -77,21 +77,21 @@
             <!-- pupitre 3 -->
             <div class="col-xs-6 col-sm-4 col-md-4">
                 <table class="table table-striped">
-                    <tr class="warning"><th>Pupitre 3</th>
+                    <tr class="success" id="pupitre_3"><th>Pupitre 3</th>
                         <td>
-                            <button type="button" class="btn btn-warning btn-xs" title="Effacer les images pour faire de la place"><span class="glyphicon glyphicon-fire"></span></button>
-                            <button type="button" class="btn btn-primary btn-xs" title="re-démarrer le système"><span class="glyphicon glyphicon-repeat"></span></button>
-                            <button type="button" class="btn btn-danger btn-xs" title="Arrêter le système"><span class="glyphicon glyphicon-off"></span></button>
+                            <button type="button" id="cleanup_3" class="commande btn btn-warning btn-xs" title="Effacer les images pour faire de la place"><span class="glyphicon glyphicon-fire"></span></button>
+                            <button type="button" id="reboot_3" class="commande btn btn-primary btn-xs" title="re-démarrer le système"><span class="glyphicon glyphicon-repeat"></span></button>
+                            <button type="button" id="halt_3" class="commande btn btn-danger btn-xs" title="Arrêter le système"><span class="glyphicon glyphicon-off"></span></button>
                         </td>
                     </tr>
-                    <tr>
-                        <th>Réseau</th><td id="monitor-network-3"></td>
+                    <tr class="danger">
+                        <td colspan="2" id="error_3"></td> 
                     </tr>
                     <tr>
-                        <th>Espace disponible</th><td id="available-space-3"></td>
+                        <th>Espace disponible</th><td id="available_space_3"></td>
                     </tr>
                     <tr>
-                        <th>service <%= app_title %></th><td id="lues-service-3"></td>
+                        <th>service <%= app_title %></th><td id="lues_service_3"></td>
                     </tr>
                 </table>
             </div>
@@ -105,101 +105,131 @@
     <!-- Scripts to be included in a js library futher more... -->
     <script type="text/javascript">
         $(document).ready( function() {
-            //
-            // Launch ajax request
-            //
-            function update(elmt, display_callback) {
-                var pupitre_id = elmt.attr("id").replace(/[-#A-z]/g, ""),
-                    device = "rasp" + pupitre_id,
-                    command = elmt.attr("id").replace("-"+pupitre_id, "");
-                console.log("Refreshing " + command + " for device #" + pupitre_id);
+            var DEVICE_LIST = {
+                                rasp1 : { host: "192.168.1.90", port: '8080', path: '/monitor' }, 
+                                rasp2 : { host: "127.0.0.1", port: '8080', path: '/monitor' }, 
+                                rasp3 : { host: "127.0.0.1", port: '8080', path: '/monitor' }, 
+                                rasp4 : { host: "127.0.0.1", port: '8080', path: '/monitor' }
+                            };
+            var LABEL_OK = "<span class='glyphicon glyphicon-thumbs-up'></span>",
+                CSS_OK = "success",
+                LABEL_KO = "<span class='glyphicon glyphicon-thumbs-down'></span>",
+                CSS_KO = "danger";
+
+            // Les valeurs monitorées sauvegardées
+            // var images_count_value = 0,
+            //     available_space_value = 0,
+            //     lues_service_value = 0,
+            //     dhcp_service_value = 0;
+
+            function monitor(device, display_callback) {
+                var idx = device.replace(/[-#A-z]/g, "");
+                $("#error_" + idx).hide();
+                $("#pupitre_" + idx).removeClass("success").removeClass("danger").addClass("warning");
+
+                options = DEVICE_LIST[device];
+                var url = 'http://' + options.host + ':' + options.port + options.path;
+                console.log(' calling rasp api @' + device + ": url=" + url);
+                // Appel ajax du device monitoré
                 $.ajax({
-                    url: '/api/?cmd=' + command + '&device=' + device, 
+                    url: url,
                     type: 'GET',
                     success : function(response){
-                        var r = JSON.parse(response);
-                        if (r.stderr != "") {
-                            console.log("error : " + r.stderr + "\ncmd : " + r.cmd);
+                         if (response != "" && response != undefined) {
+                            // var r = JSON.parse(response);
+                            var r = response;
+                            if (r.stderr != "") {
+                                console.log("error : " + r.stderr);
+                            } else {
+                                // images_count_value = r.data.images_count;
+                                // available_space_value = r.data.available_space;
+                                // lues_service_value = r.data.lues_service;
+                                // dhcp_service_value = r.data.dhcp_service;
+                                display_callback(idx, r);
+                            }
                         } else {
-                            elmt.fadeOut("fast");
-                            display_callback(elmt, r);
+                            console.log("La réponse JSON est vide...");
+                            display_error(idx, "Server is responding, but no response was sent.");
                         }
                     },
                     error : function(response){
-                        console.log(response);
+                        if (response.status == 404) {
+                            display_error(idx, "Monitoring service may be down !");
+                        }
+                        display_callback(idx);
+                         
                     }
                 });
             }
 
-            // Callback de mise en page images-count
-            var display_images_count = function(elmt, data) {
-                var val = data.stdout.replace(' ', '');
-                elmt.text("" +  val).fadeIn("fast");
+            // Gestion des erreurs 
+            function display_error(idx, err) {
+                $("#error_" + idx).text(err).show();
+                $("#pupitre_" + idx).removeClass("success").removeClass("warning").addClass("danger");
             }
 
-            // Callback de mise en page available-space
-            var display_available_space = function(elmt, data){
-                var val = data.stdout.replace(' ', '');
-                elmt.text("" +  val).fadeIn("fast");
+            // Callback de mise en page et affichage des données.
+            var display_data = function(idx, r) {
+                $("#pupitre_" + idx).removeClass("warning").removeClass("danger").addClass("success")
+                $("#images_count_" + idx).text(r.data.images_count);
+                $("#available_space_" + idx).text(r.data.available_space + "Mo");
+
+                var css_class = CSS_KO, label = LABEL_KO;
+                if (r.data.lues_service == "1") { 
+                    css_class = CSS_OK; 
+                    label = LABEL_OK;
+                }
+                $("#lues_service_" + idx).html('<span class="label label-' + css_class + '">' +  label + '</span>');
+
+                if ($("#dhcp_service_"+idx)) {
+                    css_class = CSS_KO;
+                    label = LABEL_KO;
+                    if (r.data.dhcp_service == "1") { 
+                        css_class = CSS_OK; 
+                        label = LABEL_OK;
+                    }
+                    $("#dhcp_service_" + idx).html('<span class="label label-' + css_class + '">' +  label + '</span>');
+                }
+
             }
 
-            // Callback de mise en page monitor-network
-            var display_monitor_network = function(elmt, data){
-                var val = data.stdout.replace(' ', '');
-                elmt.text("" +  val).fadeIn("fast");
+            function send_command(idx, cmd) {
+                options = DEVICE_LIST['rasp' + idx];
+                var url = 'http://' + options.host + ':' + options.port + '/' + cmd;
+                console.log(' Command ' + cmd + ' sent to  #rasp' + idx + ": url=" + url);
+                // Appel ajax du device commandé
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success : function(response){
+                        console.log("commande '"+cmd+"' lancée...");
+                    },
+                    error : function(response){
+
+                    }
+                });
             }
 
-            // Callback de mise en page lues-service
-            var display_lues_service = function(elmt, data){
-                var val = data.stdout.replace(' ', '');
-                elmt.text("" +  val).fadeIn("fast");
-            }
+            $(".commande").click(function(){
+                var t = $(this).attr("id").split("_");
+                send_command(t[1], t[0]);
+            });            
 
+            setInterval(function(){
+                monitor("rasp1", display_data);
+            }, 5000);
 
-            // Launching all updates
             setInterval(function(){
-                update($("#images-count-1"), display_images_count);
-            }, 10000);
-            setInterval(function(){
-                update($("#images-count-2"), display_images_count);
-            }, 10000);
-            setInterval(function(){
-                update($("#images-count-3"), display_images_count);
-            }, 10000);
+                monitor("rasp2", display_data);
+            }, 5000);
 
-            // Available space
             setInterval(function(){
-                update($("#available-space-1"), display_available_space);
-            }, 10000);
-            setInterval(function(){
-                update($("#available-space-2"), display_available_space);
-            }, 10000);
-            setInterval(function(){
-                update($("#available-space-3"), display_available_space);
-            }, 10000);
+                monitor("rasp3", display_data);
+            }, 5000);
 
-            // monitor network
-            setInterval(function(){
-                update($("#monitor-network-1"), display_monitor_network);
-            }, 10000);
-            setInterval(function(){
-                update($("#monitor-network-2"), display_monitor_network);
-            }, 10000);
-            setInterval(function(){
-                update($("#monitor-network-3"), display_monitor_network);
-            }, 10000);
-
-            // Service applicatif LU.ES_
-            setInterval(function(){
-                update($("#lues-service-1"), display_lues_service);
-            }, 10000);
-            setInterval(function(){
-                update($("#lues-service-2"), display_lues_service);
-            }, 10000);
-            setInterval(function(){
-                update($("#lues-service-3"), display_lues_service);
-            }, 10000);
-
+            // monitor("rasp1", display_data);
+            // monitor("rasp2", display_data);
+            // monitor("rasp3", display_data);
 
          });
  
