@@ -41,7 +41,14 @@
                         <td colspan="2" id="error_1"></td> 
                     </tr>
                     <tr>
-                        <th>Espace disponible</th><td id="available_space_1"></td>
+                        <th>Espace disponible</th>
+                        <td>
+                        	<div class="progress">
+							  <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" id="available_space_1" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+							    <span id="available_space_text_1" class="sr-only"></span>
+							  </div>
+							</div>
+                        </td>
                     </tr>
                     <tr>
                         <th>service <%= app_title %></th><td id="lues_service_1"></td>
@@ -66,7 +73,14 @@
                         <td colspan="2" id="error_2"></td> 
                     </tr>
                     <tr>
-                        <th>Espace disponible</th><td id="available_space_2"></td>
+                        <th>Espace disponible</th>
+                        <td>
+                        	<div class="progress">
+							  <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" id="available_space_2" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+							    <span id="available_space_text_2" class="sr-only"></span>
+							  </div>
+							</div>
+                        </td>
                     </tr>
                     <tr>
                         <th>service <%= app_title %></th><td id="lues_service_2"></td>
@@ -88,7 +102,14 @@
                         <td colspan="2" id="error_3"></td> 
                     </tr>
                     <tr>
-                        <th>Espace disponible</th><td id="available_space_3"></td>
+                        <th>Espace disponible</th>
+                        <td>
+                        	<div class="progress">
+							  <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" id="available_space_3" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+							    <span id="available_space_text_3" class="sr-only"></span>
+							  </div>
+							</div>
+                        </td>
                     </tr>
                     <tr>
                         <th>service <%= app_title %></th><td id="lues_service_3"></td>
@@ -99,12 +120,15 @@
         </div>
     </div>
 
+	<button class="btn btn-xs btn-primary" type="button"> Messages <span class="badge" id='nbmes'></span></button>
+	<button class="btn btn-xs btn-primary" type="button"> Check <span class="badge" id='nbreq'></span></button>
+
     <footer>
         <% include ../partials/footer %>
     </footer>
-    <!-- Scripts to be included in a js library futher more... -->
     <script type="text/javascript">
         $(document).ready( function() {
+        	// Définition des éléments monitorés
             var DEVICE_LIST = {
                                 rasp1 : { host: "192.168.1.11", port: '9000', path: '/monitor' }, 
                                 rasp2 : { host: "192.168.1.12", port: '9000', path: '/monitor' }, 
@@ -116,12 +140,18 @@
                 LABEL_KO = "<span class='glyphicon glyphicon-thumbs-down'></span>",
                 CSS_KO = "danger";
 
-            // Les valeurs monitorées sauvegardées
-            // var images_count_value = 0,
-            //     available_space_value = 0,
-            //     lues_service_value = 0,
-            //     dhcp_service_value = 0;
+            var nbRequestTotal = 0;
 
+            // ----------------------------------------------------------------------
+ 			// sleep time expects milliseconds
+            // ----------------------------------------------------------------------
+			function sleep (time) {
+			  return new Promise((resolve) => setTimeout(resolve, time));
+			}
+
+            // ----------------------------------------------------------------------
+            // Moniroring ajax function
+            // ----------------------------------------------------------------------
             function monitor(device, display_callback) {
                 var idx = device.replace(/[-#A-z]/g, "");
                 $("#error_" + idx).hide();
@@ -131,51 +161,86 @@
                 var url = 'http://' + options.host + ':' + options.port + options.path;
                 console.log(' calling rasp api @' + device + ": url=" + url);
                 // Appel ajax du device monitoré
+                nbRequestTotal++;
                 $.ajax({
                     url: url,
                     type: 'GET',
+                    timeout: 6000,
                     success : function(response){
-                         if (response != "" && response != undefined) {
-                            // var r = JSON.parse(response);
-                            var r = response;
-                            if (r.stderr != "") {
-                                console.log("error : " + r.stderr);
+                        if (response != "" && response != undefined) {
+                            if (response.stderr != "") {
+                                console.log("error : " + response.stderr);
                             } else {
-                                // images_count_value = r.data.images_count;
-                                // available_space_value = r.data.available_space;
-                                // lues_service_value = r.data.lues_service;
-                                // dhcp_service_value = r.data.dhcp_service;
-                                display_callback(idx, r);
+                                display_callback(idx, response);
                             }
-                        } else {
+                        } else { // No response
                             console.log("La réponse JSON est vide...");
                             display_error(idx, "Server is responding, but no response was sent.");
                         }
                     },
                     error : function(response){
-                        if (response.status == 404) {
-                            display_error(idx, "Monitoring service may be down !");
-                        }
-                        display_callback(idx);
-                         
-                    }
+                   		display_error(idx, "Monitoring service may be down !\n Status is " + response.status);
+                    },
+                    complete : function(q, status){
+                    	var nextRequestIn = 5000;
+                    	if ( status == 'notmodified' ) { // Nothing new, waiting more
+                    		nextRequestIn = 10000;
+                    	}
+                    	if (status == 'abort') {
+                    		display_error(idx, "User cancelled monitoring request.");
+                    		nextRequestIn = 0; // No more request until the pb has been solved.
+                    	}
+                    	if (status == 'parsererror' || status == 'nocontent' || status == 'error') {
+                    		display_error(idx, "Something went wrong on rasp" + idx + " response...");
+                    	}
+                    	if (status == 'timeout') {
+                    		display_error(idx, "Rasp" + idx + " is unreachable. ");
+                    		nextRequestIn = 5000;
+                    	}
+                    	// Attendre avant de lancer le prochain monitoring
+                    	if (nextRequestIn > 0) {
+	                    	sleep(nextRequestIn).then(() => {
+							    monitor("rasp" + idx, display_data);
+							});
+	                    }
+	                    display_stats();
+					}
                 });
             }
 
-            // Gestion des erreurs 
-            function display_error(idx, err) {
-                $("#error_" + idx).text(err).show();
-                $("#pupitre_" + idx).removeClass("success").removeClass("warning").addClass("danger");
+            // ----------------------------------------------------------------------
+            // Affichage de stats
+            // ----------------------------------------------------------------------
+            function display_stats() {
+            	var ndGaletsTotal = 0;
+            	for (i=1; i <=3; i++){ 
+            		ndGaletsTotal += parseInt($("#images_count_" + i).text()); 
+            	}
+            	$("#nbmes").text(ndGaletsTotal);
+            	$("#nbreq").text(nbRequestTotal);
             }
 
+            // ----------------------------------------------------------------------
+            // Callback d'affichage des erreurs
+            // ----------------------------------------------------------------------
+            function display_error(idx, err) {
+                $("#error_" + idx).text(err).show();
+                $("#pupitre_" + idx).removeClass("success").removeClass("warning").addClass("danger");                          	 
+            }
+
+            // ----------------------------------------------------------------------
             // Callback de mise en page et affichage des données.
-            var display_data = function(idx, r) {
+            // ----------------------------------------------------------------------
+            var display_data = function(idx, response) {
+
                 $("#pupitre_" + idx).removeClass("warning").removeClass("danger").addClass("success")
-                $("#images_count_" + idx).text(r.data.images_count);
-                $("#available_space_" + idx).text(r.data.available_space + "Mo");
+                $("#images_count_" + idx).text(response.data.images_count);
+                // $("#available_space_" + idx).text(response.data.available_space + "Mo");
+                $("#available_space_" + idx).attr("style", "width:" + response.data.available_space + "%;");
+                $("#available_space_text_" + idx).text(response.data.available_space + "%");
 
                 var css_class = CSS_KO, label = LABEL_KO;
-                if (r.data.lues_service == "1") { 
+                if (response.data.lues_service == "1") { 
                     css_class = CSS_OK; 
                     label = LABEL_OK;
                 }
@@ -184,7 +249,7 @@
                 if ($("#dhcp_service_"+idx)) {
                     css_class = CSS_KO;
                     label = LABEL_KO;
-                    if (r.data.dhcp_service == "1") { 
+                    if (response.data.dhcp_service == "1") { 
                         css_class = CSS_OK; 
                         label = LABEL_OK;
                     }
@@ -193,6 +258,9 @@
 
             }
 
+            // ----------------------------------------------------------------------
+            // Fonction ajax d'envoie de commandes aux pupitres
+            // ----------------------------------------------------------------------            
             function send_command(idx, cmd) {
                 options = DEVICE_LIST['rasp' + idx];
                 var url = 'http://' + options.host + ':' + options.port + '/' + cmd;
@@ -210,26 +278,18 @@
                 });
             }
 
+            // ----------------------------------------------------------------------
+            // Bouton d'envoie d'une commande
+            // ----------------------------------------------------------------------
             $(".commande").click(function(){
                 var t = $(this).attr("id").split("_");
                 send_command(t[1], t[0]);
             });            
 
-            setInterval(function(){
-                monitor("rasp1", display_data);
-            }, 5000);
-
-            setInterval(function(){
-                monitor("rasp2", display_data);
-            }, 5000);
-
-            setInterval(function(){
-                monitor("rasp3", display_data);
-            }, 5000);
-
-            // monitor("rasp1", display_data);
-            // monitor("rasp2", display_data);
-            // monitor("rasp3", display_data);
+            // Demarrage du monitoring
+            monitor("rasp1", display_data);
+            monitor("rasp2", display_data);
+            monitor("rasp3", display_data);
 
          });
  
