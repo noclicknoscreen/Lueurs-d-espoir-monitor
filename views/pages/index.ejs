@@ -291,7 +291,7 @@
                 var url = 'http://' + options.host + ':' + options.port + '/' + cmd;
                 console.log(' Command ' + cmd + ' sent to  #rasp' + idx + ": url=" + url);
                 // Stop monitoring Rasp if reboot or halt
-                if (cmd == "rebbot" || cmd == "halt") {
+                if (cmd == "reboot" || cmd == "halt") {
                 	$("#monitor_" + idx).bootstrapSwitch('state', false, false);
                 	MON[idx] = false;
                 }
