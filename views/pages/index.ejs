@@ -14,14 +14,17 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-6 col-sm-4 col-md-4">
+                <div><input type="checkbox" id="monitor_1" name="monitor_1" class="chk_monitor"></div>
                 <img src="images/pupitre.png" class="pupitre" id="pupitre1" />
                 <div type="button" class="btn btn-default btn-lg"><span id="images_count_1">0</span></div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4">
+                <div><input type="checkbox" id="monitor_2" name="monitor_2" class="chk_monitor"></div>
                 <img src="images/pupitre.png" class="pupitre" id="pupitre2" />
                 <div type="button" class="btn btn-default btn-lg"><span id="images_count_2">0</span></div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4">
+                <div><input type="checkbox" id="monitor_3" name="monitor_3" class="chk_monitor"></div>
                 <img src="images/pupitre.png" class="pupitre" id="pupitre3" />
                 <div type="button" class="btn btn-default btn-lg"><span id="images_count_3">0</span></div>
             </div>
@@ -44,8 +47,8 @@
                         <th>Espace disponible</th>
                         <td>
                         	<div class="progress">
-							  <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" id="available_space_1" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-							    <span id="available_space_text_1" class="sr-only"></span>
+							  <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" id="used_space_1" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+							    <span id="used_space_text_1" class="sr-only"></span>
 							  </div>
 							</div>
                         </td>
@@ -76,8 +79,8 @@
                         <th>Espace disponible</th>
                         <td>
                         	<div class="progress">
-							  <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" id="available_space_2" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-							    <span id="available_space_text_2" class="sr-only"></span>
+							  <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" id="used_space_2" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+							    <span id="used_space_text_2" class="sr-only"></span>
 							  </div>
 							</div>
                         </td>
@@ -105,8 +108,8 @@
                         <th>Espace disponible</th>
                         <td>
                         	<div class="progress">
-							  <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" id="available_space_3" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-							    <span id="available_space_text_3" class="sr-only"></span>
+							  <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" id="used_space_3" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+							    <span id="used_space_text_3" class="sr-only"></span>
 							  </div>
 							</div>
                         </td>
@@ -130,7 +133,7 @@
         $(document).ready( function() {
         	// Définition des éléments monitorés
             var DEVICE_LIST = {
-                                rasp1 : { host: "192.168.1.11", port: '9000', path: '/monitor' }, 
+                                rasp1 : { host: "192.168.1.90", port: '9000', path: '/monitor' }, 
                                 rasp2 : { host: "192.168.1.12", port: '9000', path: '/monitor' }, 
                                 rasp3 : { host: "192.168.1.13", port: '9000', path: '/monitor' }, 
                                 rasp4 : { host: "192.168.1.14", port: '9000', path: '/monitor' }
@@ -140,7 +143,29 @@
                 LABEL_KO = "<span class='glyphicon glyphicon-thumbs-down'></span>",
                 CSS_KO = "danger";
 
+            var MON = {1: true, 2: true, 3: true};
+
             var nbRequestTotal = 0;
+
+            // ----------------------------------------------------------------------
+            // Initializing switches
+            // ----------------------------------------------------------------------
+            for (i=0;i<=3;i++) { 
+            	var sw = $("#monitor_" + i);
+            	sw.bootstrapSwitch(); 
+            	sw.bootstrapSwitch.defaults.size = 'mini';
+				sw.bootstrapSwitch.defaults.onColor = 'success';
+				sw.bootstrapSwitch.defaults.offColor = 'danger';
+            }
+
+
+			$('.chk_monitor').on('switchChange.bootstrapSwitch', function(event, state) {
+			  idx = $(this).attr("id").replace(/[-#A-z]/g, "");
+			  MON[idx] = state;
+			  if (MON[idx]) {
+			  	monitor("rasp" + idx, display_data);
+			  }
+			});
 
             // ----------------------------------------------------------------------
  			// sleep time expects milliseconds
@@ -165,7 +190,7 @@
                 $.ajax({
                     url: url,
                     type: 'GET',
-                    timeout: 6000,
+                    timeout: 30000,
                     success : function(response){
                         if (response != "" && response != undefined) {
                             if (response.stderr != "") {
@@ -182,9 +207,9 @@
                    		display_error(idx, "Monitoring service may be down !\n Status is " + response.status);
                     },
                     complete : function(q, status){
-                    	var nextRequestIn = 5000;
+                    	var nextRequestIn = 10000;
                     	if ( status == 'notmodified' ) { // Nothing new, waiting more
-                    		nextRequestIn = 10000;
+                    		nextRequestIn = 40000;
                     	}
                     	if (status == 'abort') {
                     		display_error(idx, "User cancelled monitoring request.");
@@ -195,10 +220,10 @@
                     	}
                     	if (status == 'timeout') {
                     		display_error(idx, "Rasp" + idx + " is unreachable. ");
-                    		nextRequestIn = 5000;
+                    		nextRequestIn = 40000;
                     	}
                     	// Attendre avant de lancer le prochain monitoring
-                    	if (nextRequestIn > 0) {
+                    	if (nextRequestIn > 0 && MON[idx]) {
 	                    	sleep(nextRequestIn).then(() => {
 							    monitor("rasp" + idx, display_data);
 							});
@@ -235,9 +260,9 @@
 
                 $("#pupitre_" + idx).removeClass("warning").removeClass("danger").addClass("success")
                 $("#images_count_" + idx).text(response.data.images_count);
-                // $("#available_space_" + idx).text(response.data.available_space + "Mo");
-                $("#available_space_" + idx).attr("style", "width:" + response.data.available_space + "%;");
-                $("#available_space_text_" + idx).text(response.data.available_space + "%");
+                // $("#used_space_" + idx).text(response.data.used_space + "Mo");
+                $("#used_space_" + idx).attr("style", "width:" + response.data.used_space + ";");
+                $("#used_space_text_" + idx).text(response.data.used_space);
 
                 var css_class = CSS_KO, label = LABEL_KO;
                 if (response.data.lues_service == "1") { 
@@ -265,6 +290,11 @@
                 options = DEVICE_LIST['rasp' + idx];
                 var url = 'http://' + options.host + ':' + options.port + '/' + cmd;
                 console.log(' Command ' + cmd + ' sent to  #rasp' + idx + ": url=" + url);
+                // Stop monitoring Rasp if reboot or halt
+                if (cmd == "rebbot" || cmd == "halt") {
+                	$("#monitor_" + idx).bootstrapSwitch('state', false, false);
+                	MON[idx] = false;
+                }
                 // Appel ajax du device commandé
                 $.ajax({
                     url: url,
@@ -287,9 +317,9 @@
             });            
 
             // Demarrage du monitoring
-            monitor("rasp1", display_data);
-            monitor("rasp2", display_data);
-            monitor("rasp3", display_data);
+            // monitor("rasp1", display_data);
+            // monitor("rasp2", display_data);
+            // monitor("rasp3", display_data);
 
          });
  
